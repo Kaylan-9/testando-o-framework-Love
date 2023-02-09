@@ -1,23 +1,45 @@
 local love = require 'love'
-local player = require 'Player'
+local Player = require 'Player'
+local Platform = require 'Platform'
+local player = Player()
+local platform = Platform()
 
 function love.load()
   love.window.setTitle('Hello, World')
   love.mouse.setVisible(false)
-  _G.position = 12
+  love.graphics.setBackgroundColor(120/255, 200/255, 255/255)
 end
 
-
 function love.update(dt)
+  player.y = platform.bottom(128)
+
+  if love.keyboard.isDown('d') or love.keyboard.isDown('a') then
+    player.sprite_change_marker = player.sprite_change_marker + 0.5
+    if math.ceil(player.sprite_change_marker)==math.floor(player.sprite_change_marker) then
+      player.img_position = player.img_position + 4
+      player.sprite_change_marker = 0.0
+    end
+  end 
+
   if love.keyboard.isDown('d') then
-    position = position + 1
+    if player.img_position>=Player():quads().n or player.img_position==2 or player.img_position==6 or player.img_position==8 then
+      player.img_position = 3
+    end
+    player.x = player.x + 1
   end  
-  if position>=player():quads().n then
-    position = 1
-  end
+
+  if love.keyboard.isDown('a') then
+    if player.img_position>=Player():quads().n or player.img_position==3 or player.img_position==7 or player.img_position==10 then
+      player.img_position = 2
+    end
+    player.x = player.x - 1
+  end  
 end
 
 function love.draw()
-  love.graphics.draw(player().sprite.image, player():quads().quads[position], player().x, player().y)
-  love.graphics.print(#player():quads().quads)
+  platform:load_scenery()
+  love.graphics.draw(player.sprite.image, Player():quads().quads[player.img_position], player.x, player.y)
+  
 end
+
+

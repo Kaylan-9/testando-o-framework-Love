@@ -2,6 +2,8 @@ _G.love = require 'love'
 
 local function Player()
   return {
+    img_position=3,
+    sprite_change_marker=0.0,
     x=12,
     y=24,
     sprite= {

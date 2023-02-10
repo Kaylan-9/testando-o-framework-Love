@@ -4,8 +4,8 @@ local function Player()
   return {
     img_position=3,
     sprite_change_marker=0.0,
-    x=12,
-    y=24,
+    x=0,
+    y=0,
     sprite= {
       image= love.graphics.newImage("sprites/fox.png"),
       h=256,

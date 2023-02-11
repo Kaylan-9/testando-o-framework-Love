@@ -1,24 +1,33 @@
 local love = require 'love'
 local Player = require 'Player'
 local Platform = require 'Platform'
+local Tree = require 'Tree'
 local player = Player()
 local platform = Platform()
+local tree = Tree()
+local objs= {
+  tree, 
+  player
+}
+
+local function animation_control()
+  player.sprite_change_marker = player.sprite_change_marker + 0.25
+  if math.ceil(player.sprite_change_marker)==math.floor(player.sprite_change_marker) then
+    player.img_position = player.img_position + 4
+    player.sprite_change_marker = 0.0
+  end
+end 
 
 function love.load()
   love.window.setTitle('Hello, World')
   love.mouse.setVisible(false)
   love.graphics.setBackgroundColor(120/255, 200/255, 255/255)
-  player.y = platform.bottom(90)
+  player.y = platform.bottom-90
+  player.quads= Player():quads().quads
 end
 
 function love.update(dt)
-  local function animation_control()
-    player.sprite_change_marker = player.sprite_change_marker + 0.25
-    if math.ceil(player.sprite_change_marker)==math.floor(player.sprite_change_marker) then
-      player.img_position = player.img_position + 4
-      player.sprite_change_marker = 0.0
-    end
-  end 
+  table.sort(objs, function(o1, o2) return o1.y<o2.y end)
 
   if love.keyboard.isDown('d') then
     animation_control()
@@ -46,7 +55,7 @@ function love.update(dt)
     end  
   end
 
-  if player.y<platform.bottom(65) then 
+  if player.y<platform.bottom-(65*1.5) then 
     if love.keyboard.isDown('s') then
       animation_control()
       if player.img_position>=Player():quads().n or (player.img_position~=1 and player.img_position~=5 and player.img_position~=9) then
@@ -60,14 +69,12 @@ end
 
 function love.draw()
   platform:load_scenery()
-  love.graphics.draw(platform.objs.tree.sprite.image, platform.objs.tree.sprite.quad, 0, platform.bottom(134))
-  if player.y<platform.bottom(80*1.5) then 
-    love.graphics.draw(player.sprite.image, Player():quads().quads[player.img_position], player.x, player.y, 0, 1.5, 1.5)
-  end
-  love.graphics.draw(platform.objs.tree.sprite.image, platform.objs.tree.sprite.quad, 250, platform.bottom(102))
-  if player.y>platform.bottom(80*1.5) then 
-    love.graphics.draw(player.sprite.image, Player():quads().quads[player.img_position], player.x, player.y, 0, 1.5, 1.5)
+  for i=1,#objs do
+    if objs[i].quads~=nil then
+      love.graphics.draw(objs[i].sprite.image, objs[i].quads[player.img_position], objs[i].x, objs[i].y, 0, 1.5, 1.5)
+    else 
+      love.graphics.draw(objs[i].sprite.image, objs[i].quad, objs[i].x, objs[i].y)    
+    end
   end
 end
-
 

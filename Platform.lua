@@ -10,22 +10,11 @@ local function Platform()
       image= love.graphics.newImage('sprites/Grass2.jpg'),
       size= 32 * 1.5
     },
-    tree= {
-      sprite= {
-        image= love.graphics.newImage('sprites/scenographicobjects.png'),
-        quad= nil,
-        w=80,
-        h=90
-      }
-    }
   }
-  objs.tree.sprite.quad= love.graphics.newQuad(0, 0, objs.tree.sprite.w, objs.tree.sprite.h, 169, 154)
   local nBlocksInY = 10
-  local bottom = function (size) 
-    local width, height = love.graphics.getDimensions()
-    return height-size
-  end
-  local top= bottom(0) - (nBlocksInY * objs.one.size)
+  local width, height = love.graphics.getDimensions()
+  local bottom = height
+  local top= bottom - (nBlocksInY * objs.one.size)
 
   return {
     objs= objs,
@@ -34,7 +23,7 @@ local function Platform()
     load_scenery = function(self)
       self.position = { 
         x= 32,
-        y = bottom(32)
+        y = bottom-32
       }
       for i=1, 25 do
         for j=1, nBlocksInY do

@@ -14,12 +14,15 @@ local function Platform()
   local nBlocksInY = 10
   local width, height = love.graphics.getDimensions()
   local bottom = height
+  local right = width
   local top= bottom - (nBlocksInY * objs.one.size)
 
   return {
     objs= objs,
     bottom= bottom,
     top= top,
+    left= 0,
+    right= right,
     load_scenery = function(self)
       self.position = { 
         x= 32,

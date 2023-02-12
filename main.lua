@@ -5,8 +5,35 @@ local Tree = require 'Tree'
 local player = Player()
 local platform = Platform()
 local collision_objs= {
-  Tree(200, 200), 
-  Tree(250, 170),
+  Tree(200, 190), 
+  Tree(250, 250),
+  Tree(450, 120),
+  Tree(350, 370),
+  Tree(200, 300),
+  Tree(331, 350),
+  Tree(331, 130),
+  Tree(131, 230),
+  Tree(431, 200),
+  Tree(431, 100),
+  Tree(100, 100),
+  Tree(50, 70),
+  Tree(20, 170),
+  Tree(20, 250),
+  Tree(420, 50),
+  Tree(400, 150),
+  Tree(600, 150),
+  Tree(570, 100),
+  Tree(499, 320),
+  Tree(559, 420),
+  Tree(559, 350),
+  Tree(620, 250),
+  Tree(175, 410),
+  Tree(295, 425),
+  Tree(495, 405),
+  Tree(45, 445),
+  Tree(25, 335),
+  Tree(654, 405),
+  Tree(654, 105),
 }
 local objs= collision_objs
 local colission_values= {y=0, x=0, colission=false}
@@ -104,7 +131,7 @@ function love.update(dt)
     end  
   end
 
-  -- table.sort(objs, function(o1, o2) return o1.y<o2.y end)
+  table.sort(objs, function(o1, o2) return o1.y<o2.y end)
 end
 
 function love.draw()

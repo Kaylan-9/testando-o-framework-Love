@@ -1,9 +1,12 @@
 local love = require 'love'
 local Player = require 'Player'
 local Platform = require 'Platform'
+local Demon = require 'Demon'
 local Tree = require 'Tree'
 local player = Player()
 local platform = Platform()
+local demon = Demon()
+local update_frame = 0
 local collision_objs= {
   Tree(200, 190), 
   Tree(250, 250),
@@ -34,6 +37,7 @@ local collision_objs= {
   Tree(25, 335),
   Tree(654, 405),
   Tree(654, 105),
+  demon
 }
 local objs= collision_objs
 local colission_values= {y=0, x=0, colission=false}
@@ -80,12 +84,48 @@ function love.load()
   love.graphics.setBackgroundColor(120/255, 200/255, 255/255)
   player.y = platform.bottom-90
   player.quads= Player():quads().quads
+  demon.quads= Demon():quads().quads
   table.insert(objs, player)
 end
 
 function love.update(dt)
   colission_values = colissions({}, player.x, player.y, collision_objs)
   player.x = colission_values.x
+
+  update_frame= update_frame + (dt)
+  if demon.x<player.x-20 then
+    if demon.img_position>=16 or (demon.img_position~=12 and demon.img_position~=8 and demon.img_position~=4) then 
+      demon.img_position = 4 
+    end
+    demon.x = demon.x + 1
+  elseif demon.x>player.x then
+    if demon.img_position>=14 or (demon.img_position~=10 and demon.img_position~=6 and demon.img_position~=2) then 
+      demon.img_position = 1
+    end
+    demon.x = demon.x - 1
+  else
+    demon.img_position = 4  
+  end
+
+  if demon.y-20<player.y then
+    if demon.img_position>=15 or (demon.img_position~=11 and demon.img_position~=7 and demon.img_position~=3) then 
+      demon.img_position = 3 
+    end
+    demon.y = demon.y + 1
+  elseif demon.y-20>player.y then
+    if demon.img_position>=13 or (demon.img_position~=9 and demon.img_position~=5 and demon.img_position~=1) then 
+      demon.img_position = 1
+    end
+    demon.y = demon.y - 1
+  end
+
+  if update_frame>=0.3 then
+    if (demon.img_position~=16 or demon.img_position~=15 or demon.img_position~=14 or demon.img_position~=13) then 
+      demon.img_position = demon.img_position + 4 
+    end
+    update_frame= 0
+  end
+  
 
   if player.x<platform.right then
     if love.keyboard.isDown('d') then
@@ -136,18 +176,12 @@ end
 
 function love.draw()
   platform:load_scenery()
-  if colission_values.colission then
-    love.graphics.print('s')
-  else
-    love.graphics.print('n')
-  end 
-
   for i=1,#objs do
     if objs[i].quads~=nil then
-      love.graphics.draw(objs[i].sprite.image, objs[i].quads[player.img_position], objs[i].x, objs[i].y, 0, 1.5, 1.5, objs[i].quad.w, objs[i].quad.h)
+      love.graphics.draw(objs[i].sprite.image, objs[i].quads[objs[i].img_position], objs[i].x, objs[i].y, 0, 1.5, 1.5, objs[i].quad.w, objs[i].quad.h)
     else 
       love.graphics.draw(objs[i].sprite.image, objs[i].quad, objs[i].x, objs[i].y, 0, 1.5, 1.5, 0, objs[i].h)    
     end
-  end
+  end   
 end
 

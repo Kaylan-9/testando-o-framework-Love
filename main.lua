@@ -93,30 +93,40 @@ function love.update(dt)
   player.x = colission_values.x
 
   update_frame= update_frame + (dt)
-  if demon.x<player.x-20 then
+  if demon.x<=player.x-20 then
     if demon.img_position>=16 or (demon.img_position~=12 and demon.img_position~=8 and demon.img_position~=4) then 
       demon.img_position = 4 
     end
-    demon.x = demon.x + 1
-  elseif demon.x>player.x then
-    if demon.img_position>=14 or (demon.img_position~=10 and demon.img_position~=6 and demon.img_position~=2) then 
-      demon.img_position = 1
+    if demon.x~=player.x-20 then
+      demon.x = demon.x + 1
     end
-    demon.x = demon.x - 1
-  else
-    demon.img_position = 4  
   end
 
-  if demon.y-20<player.y then
-    if demon.img_position>=15 or (demon.img_position~=11 and demon.img_position~=7 and demon.img_position~=3) then 
-      demon.img_position = 3 
+  if demon.x>=player.x+40 then
+    if demon.img_position>=14 or (demon.img_position~=10 and demon.img_position~=6 and demon.img_position~=2) then 
+      demon.img_position = 2
     end
-    demon.y = demon.y + 1
-  elseif demon.y-20>player.y then
+    if demon.x~=player.x+40 then
+      demon.x = demon.x - 1
+    end
+  end
+
+  if demon.y>=player.y+20 then
     if demon.img_position>=13 or (demon.img_position~=9 and demon.img_position~=5 and demon.img_position~=1) then 
       demon.img_position = 1
     end
-    demon.y = demon.y - 1
+    if demon.y+20~=player.y then
+      demon.y = demon.y - 1
+    end    
+  end
+
+  if demon.y<=player.y+5 then
+    if demon.img_position>=15 or (demon.img_position~=11 and demon.img_position~=7 and demon.img_position~=3) then 
+      demon.img_position = 3 
+    end
+    if demon.y-5~=player.y then
+      demon.y = demon.y + 1
+    end
   end
 
   if update_frame>=0.3 then

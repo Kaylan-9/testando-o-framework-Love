@@ -93,49 +93,6 @@ function love.update(dt)
   player.x = colission_values.x
 
   update_frame= update_frame + (dt)
-  if demon.x<=player.x-20 then
-    if demon.img_position>=16 or (demon.img_position~=12 and demon.img_position~=8 and demon.img_position~=4) then 
-      demon.img_position = 4 
-    end
-    if demon.x~=player.x-20 then
-      demon.x = demon.x + 1
-    end
-  end
-
-  if demon.x>=player.x+40 then
-    if demon.img_position>=14 or (demon.img_position~=10 and demon.img_position~=6 and demon.img_position~=2) then 
-      demon.img_position = 2
-    end
-    if demon.x~=player.x+40 then
-      demon.x = demon.x - 1
-    end
-  end
-
-  if demon.y>=player.y+20 then
-    if demon.img_position>=13 or (demon.img_position~=9 and demon.img_position~=5 and demon.img_position~=1) then 
-      demon.img_position = 1
-    end
-    if demon.y+20~=player.y then
-      demon.y = demon.y - 1
-    end    
-  end
-
-  if demon.y<=player.y+5 then
-    if demon.img_position>=15 or (demon.img_position~=11 and demon.img_position~=7 and demon.img_position~=3) then 
-      demon.img_position = 3 
-    end
-    if demon.y-5~=player.y then
-      demon.y = demon.y + 1
-    end
-  end
-
-  if update_frame>=0.3 then
-    if (demon.img_position~=16 or demon.img_position~=15 or demon.img_position~=14 or demon.img_position~=13) then 
-      demon.img_position = demon.img_position + 4 
-    end
-    update_frame= 0
-  end
-  
 
   if player.x<platform.right then
     if love.keyboard.isDown('d') then
@@ -181,6 +138,48 @@ function love.update(dt)
     end  
   end
 
+
+
+  if demon.x<=player.x-((player.quad.w/2)+10) then
+    if demon.img_position>=16 or (demon.img_position~=12 and demon.img_position~=8 and demon.img_position~=4) then 
+      demon.img_position = 4 
+    end
+    if demon.x~=player.x-20 then
+      demon.x = demon.x + 1
+    end
+  elseif demon.x>=player.x+((player.quad.w/2)+10) then
+    if demon.img_position>=14 or (demon.img_position~=10 and demon.img_position~=6 and demon.img_position~=2) then 
+      demon.img_position = 2
+    end
+    if demon.x~=player.x+40 then
+      demon.x = demon.x - 1
+    end
+  end
+
+  if demon.y>=player.y+20 then
+    if demon.img_position>=13 or (demon.img_position~=9 and demon.img_position~=5 and demon.img_position~=1) then 
+      demon.img_position = 1
+    end
+    if demon.y+20~=player.y then
+      demon.y = demon.y - 1
+    end    
+  elseif demon.y<=player.y+5 then
+    if demon.img_position>=15 or (demon.img_position~=11 and demon.img_position~=7 and demon.img_position~=3) then 
+      demon.img_position = 3 
+    end
+    if demon.y-5~=player.y then
+      demon.y = demon.y + 1
+    end
+  end
+
+  if update_frame>=0.3 then
+    if (demon.img_position<13) then 
+      demon.img_position = demon.img_position + 4 
+    end
+    update_frame= 0
+  end
+  
+
   table.sort(objs, function(o1, o2) return o1.y<o2.y end)
 end
 
@@ -188,7 +187,7 @@ function love.draw()
   platform:load_scenery()
   for i=1,#objs do
     if objs[i].quads~=nil then
-      love.graphics.draw(objs[i].sprite.image, objs[i].quads[objs[i].img_position], objs[i].x, objs[i].y, 0, 1.5, 1.5, objs[i].quad.w, objs[i].quad.h)
+      love.graphics.draw(objs[i].sprite.image, objs[i].quads[objs[i].img_position], objs[i].x, objs[i].y, 0, 1.5, 1.5, (objs[i].quad.w/2), objs[i].quad.h)
     else 
       love.graphics.draw(objs[i].sprite.image, objs[i].quad, objs[i].x, objs[i].y, 0, 1.5, 1.5, 0, objs[i].h)    
     end

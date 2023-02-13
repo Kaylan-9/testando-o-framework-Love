@@ -11,6 +11,7 @@ local function Demon()
     sprite_change_marker=0.0,
     x=100,
     y=250,
+    life=250,
     sprite= {
       image= love.graphics.newImage("sprites/demon.png"),
       h=256,

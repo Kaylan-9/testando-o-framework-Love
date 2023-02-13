@@ -4,5 +4,5 @@ Um teste das principais ferramentas do Love, um framework da linguagem Lua volta
 Sprite "fox.png" criado por patvanmackelberg, bleutailfly, & Jordan Irwin (AntumDeluge). Disponível em: <https://opengameart.org/node/88912>
 Sprite "scenographicobjects.png" criado por MaximovInk. Disponível em: <https://opengameart.org/content/warm-colored-enviroment-3-trees-3-stones-2-bushes-2-grass>
 Sprite "Grass1.jpg" e "Grass2.jpg" criado por Proxy Games. Disponível em: <https://opengameart.org/content/grass-texture-pack>
-Sprite "Fruits.png" criado por Master484. Disponível em: <http://m484games.ucoz.com/>
+Sprite "Fruits.png" criado por KnoblePersona. Disponível em: <https://opengameart.org/content/weird-fruits-16x16>
 Sprite "demon.png", artista gráfico Stephen "Redshrike" Challener e William. Thompsonj como colaborador. Disponível em: <https://opengameart.org/content/lpc-imp-2>

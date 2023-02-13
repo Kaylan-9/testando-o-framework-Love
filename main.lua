@@ -3,6 +3,7 @@ local Player = require 'Player'
 local Platform = require 'Platform'
 local Demon = require 'Demon'
 local Tree = require 'Tree'
+local Item = require 'Item'
 local player = Player()
 local platform = Platform()
 local demon = Demon()
@@ -37,6 +38,8 @@ local collision_objs= {
   Tree(25, 335),
   Tree(654, 405),
   Tree(654, 105),
+  Item(654, 10, 0, 0),
+  Item(454, 80, 1, 1),
   demon
 }
 local objs= collision_objs

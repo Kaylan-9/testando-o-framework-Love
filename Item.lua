@@ -6,6 +6,8 @@ local function Item(x, y, c, r)
   local quad= {w=(spritesheet.w/count_frames.x), h=(spritesheet.h/count_frames.y)}
   local width, heigth = love.graphics.getDimensions()
   return {
+    type= 'item',
+    exist= true,
     x= x, 
     y= heigth-y,
     w= quad.w,

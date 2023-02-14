@@ -11,7 +11,7 @@ local function Player()
     sprite_change_marker=0.0,
     x=0,
     y=0,
-    life=1000,
+    life=10000,
     sprite= {
       image= love.graphics.newImage("sprites/fox.png"),
       h=256,

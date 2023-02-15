@@ -8,7 +8,6 @@ local Item = require 'Item'
 local player = Player()
 local platform = Platform()
 local demon = Demon()
-local update_frame = 0
 local collision_objs= {}
 
 local x, y= 0, 0
@@ -90,8 +89,6 @@ function love.update(dt)
     colission_values = colissions(player, collision_objs)
     player.x = colission_values.x
 
-    update_frame= update_frame + (dt)
-
     if player.x<platform.right then
       if love.keyboard.isDown('d') then
         animation_control()
@@ -135,73 +132,8 @@ function love.update(dt)
         player.y = player.y + 2
       end  
     end
-
-    if demon.x<=player.x-((player.quad.w/2)+10) then
-      if demon.img_position>=16 or (demon.img_position~=12 and demon.img_position~=8 and demon.img_position~=4) then 
-        demon.img_position = 4 
-      end
-      if demon.x~=player.x-((player.quad.w/2)+10) then
-        demon.x = demon.x + 1
-      end
-      if demon.x==player.x-((player.quad.w/2)+10) then
-        if demon.y<player.y+20 and demon.y>player.y+5 then
-          player.life = player.life - 1 
-        end
-      end
-    elseif demon.x>=player.x+((player.quad.w/2)+10) then
-      if demon.img_position>=14 or (demon.img_position~=10 and demon.img_position~=6 and demon.img_position~=2) then 
-        demon.img_position = 2
-      end
-      if demon.x~=player.x+((player.quad.w/2)+10) then
-        demon.x = demon.x - 1
-      end
-      if demon.x==player.x+((player.quad.w/2)+10) then
-        if demon.y<player.y+20 and demon.y>player.y+5 then
-          player.life = player.life - 1 
-        end
-      end
-    else
-      if demon.y<=player.y+20 and demon.y>=player.y+5 then
-        player.life = player.life - 1 
-      end
-    end
-
-    if demon.y>=player.y+20 then
-      if demon.img_position>=13 or (demon.img_position~=9 and demon.img_position~=5 and demon.img_position~=1) then 
-        demon.img_position = 1
-      end
-      if demon.y~=player.y+20 then
-        demon.y = demon.y - 1
-      end 
-      if demon.y==player.y+20 then
-        if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
-          player.life = player.life - 1 
-        end
-      end   
-    elseif demon.y<=player.y+5 then
-      if demon.img_position>=15 or (demon.img_position~=11 and demon.img_position~=7 and demon.img_position~=3) then 
-        demon.img_position = 3 
-      end
-      if demon.y~=player.y+5 then
-        demon.y = demon.y + 1
-      end
-      if demon.y==player.y+5 then
-        if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
-          player.life = player.life - 1 
-        end
-      end
-    else
-      if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
-        player.life = player.life - 1 
-      end
-    end
-
-    if update_frame>=0.3 then
-      if (demon.img_position<13) then 
-        demon.img_position = demon.img_position + 4 
-      end
-      update_frame= 0
-    end
+ 
+    player.life = demon.ChasePlayer(dt, demon, player)
   end
 
   table.sort(objs, function(o1, o2) return o1.y<o2.y end)

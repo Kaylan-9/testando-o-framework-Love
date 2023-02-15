@@ -15,7 +15,7 @@ local function Platform()
   local width, height = love.graphics.getDimensions()
   local bottom = height
   local right = width
-  local top= bottom - (nBlocksInY * objs.one.size)
+  local top= bottom - ((nBlocksInY - 1) * objs.one.size)
 
   return {
     objs= objs,

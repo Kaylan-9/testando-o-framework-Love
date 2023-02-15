@@ -9,14 +9,21 @@ local player = Player()
 local platform = Platform()
 local demon = Demon()
 local update_frame = 0
-local collision_objs= {
-  -- demon,
-  Item(90, 100, 2, 1)
-}
-for i=1, 13 do
-  table.insert(collision_objs, Tree(math.random(0, width), math.random(0, platform.top)))
+local collision_objs= {}
+
+local x, y= 0, 0
+for i=1, 20 do
+  x, y= math.random(width), math.random((platform.top*2)+85)
+  table.insert(collision_objs, Tree(x, y))
 end
+for i=1, 20 do
+  local image_x, image_y= math.random(3), math.random(3)
+  x, y= math.random(width), math.random((platform.top*2)+85)
+  table.insert(collision_objs, Item(x, y, image_x, image_y))
+end
+
 local objs= collision_objs
+table.insert(objs, demon)
 local colission_values= {y=0, x=0, colission=false}
 
 local function animation_control()
@@ -27,29 +34,42 @@ local function animation_control()
   end
 end 
 
-local function colissions(self, playerx, playery, objs) 
-  self.x= playerx
-  self.y= playery
+local function colissions(self, objs) 
   self.colission= false
-  for i=1, #collision_objs do
-    if (self.x>=objs[i].x+90 and self.x<=objs[i].x+120) then
-      if (self.y==objs[i].y) then
-        self.colission= true
-        self.y= self.y+2
-      elseif (self.y==objs[i].y-20) then
-        self.colission= true
-        self.y= self.y-2
-      end
+  local function got_item(i) 
+    if objs[i].type=='item' then
+      player.life = player.life + 100 
+      objs[i].exist=false
     end
+  end
 
-    if (self.y<=objs[i].y+7 and self.y>=objs[i].y-10) then
-      if (self.x==objs[i].x+70) then
-        self.colission= true
-        self.x= self.x-2
-      elseif (self.x==objs[i].x+120) then
-        self.colission= true
-        self.x= self.x+2
+  for i=1, #collision_objs do
+    if collision_objs[i].exist then 
+
+      if self.x>collision_objs[i].x-(self.quad.w/2)-15 and self.x<collision_objs[i].x then
+        if self.y<collision_objs[i].y+10 and self.y>collision_objs[i].y-10 then
+          self.x= self.x - 2
+          got_item(i)
+        end
+      elseif self.x<collision_objs[i].x+(self.quad.w/2)+15 and self.x>collision_objs[i].x then
+        if self.y<collision_objs[i].y+10 and self.y>collision_objs[i].y-10 then
+          self.x= self.x + 2
+          got_item(i)
+        end
+      end 
+
+      if self.y>collision_objs[i].y-10 and self.y<collision_objs[i].y+10 then
+        if self.x>collision_objs[i].x-(self.quad.w/2) and self.x<collision_objs[i].x+(self.quad.w/2) then
+          self.y= self.y - 2
+          got_item(i)
+        end
+      elseif self.y<collision_objs[i].y+20 and self.y>collision_objs[i].y+10 then
+        if self.x>collision_objs[i].x-(self.quad.w/2) and self.x<collision_objs[i].x+(self.quad.w/2) then
+          self.y= self.y + 2
+          got_item(i)
+        end
       end
+
     end
   end
   return self
@@ -67,7 +87,7 @@ end
 
 function love.update(dt)
   if player.life>0 then
-    colission_values = colissions({}, player.x, player.y, collision_objs)
+    colission_values = colissions(player, collision_objs)
     player.x = colission_values.x
 
     update_frame= update_frame + (dt)
@@ -94,7 +114,7 @@ function love.update(dt)
       end  
     end
 
-    if player.y-20>platform.top then 
+    if player.y>platform.top then 
       if love.keyboard.isDown('w') then
         animation_control()
         if player.img_position>=Player():quads().n or (player.img_position~=4 and player.img_position~=8 and player.img_position~=12) then
@@ -116,65 +136,65 @@ function love.update(dt)
       end  
     end
 
-    -- if demon.x<=player.x-((player.quad.w/2)+10) then
-    --   if demon.img_position>=16 or (demon.img_position~=12 and demon.img_position~=8 and demon.img_position~=4) then 
-    --     demon.img_position = 4 
-    --   end
-    --   if demon.x~=player.x-((player.quad.w/2)+10) then
-    --     demon.x = demon.x + 1
-    --   end
-    --   if demon.x==player.x-((player.quad.w/2)+10) then
-    --     if demon.y<player.y+20 and demon.y>player.y+5 then
-    --       player.life = player.life - 1 
-    --     end
-    --   end
-    -- elseif demon.x>=player.x+((player.quad.w/2)+10) then
-    --   if demon.img_position>=14 or (demon.img_position~=10 and demon.img_position~=6 and demon.img_position~=2) then 
-    --     demon.img_position = 2
-    --   end
-    --   if demon.x~=player.x+((player.quad.w/2)+10) then
-    --     demon.x = demon.x - 1
-    --   end
-    --   if demon.x==player.x+((player.quad.w/2)+10) then
-    --     if demon.y<player.y+20 and demon.y>player.y+5 then
-    --       player.life = player.life - 1 
-    --     end
-    --   end
-    -- else
-    --   if demon.y<=player.y+20 and demon.y>=player.y+5 then
-    --     player.life = player.life - 1 
-    --   end
-    -- end
+    if demon.x<=player.x-((player.quad.w/2)+10) then
+      if demon.img_position>=16 or (demon.img_position~=12 and demon.img_position~=8 and demon.img_position~=4) then 
+        demon.img_position = 4 
+      end
+      if demon.x~=player.x-((player.quad.w/2)+10) then
+        demon.x = demon.x + 1
+      end
+      if demon.x==player.x-((player.quad.w/2)+10) then
+        if demon.y<player.y+20 and demon.y>player.y+5 then
+          player.life = player.life - 1 
+        end
+      end
+    elseif demon.x>=player.x+((player.quad.w/2)+10) then
+      if demon.img_position>=14 or (demon.img_position~=10 and demon.img_position~=6 and demon.img_position~=2) then 
+        demon.img_position = 2
+      end
+      if demon.x~=player.x+((player.quad.w/2)+10) then
+        demon.x = demon.x - 1
+      end
+      if demon.x==player.x+((player.quad.w/2)+10) then
+        if demon.y<player.y+20 and demon.y>player.y+5 then
+          player.life = player.life - 1 
+        end
+      end
+    else
+      if demon.y<=player.y+20 and demon.y>=player.y+5 then
+        player.life = player.life - 1 
+      end
+    end
 
-    -- if demon.y>=player.y+20 then
-    --   if demon.img_position>=13 or (demon.img_position~=9 and demon.img_position~=5 and demon.img_position~=1) then 
-    --     demon.img_position = 1
-    --   end
-    --   if demon.y~=player.y+20 then
-    --     demon.y = demon.y - 1
-    --   end 
-    --   if demon.y==player.y+20 then
-    --     if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
-    --       player.life = player.life - 1 
-    --     end
-    --   end   
-    -- elseif demon.y<=player.y+5 then
-    --   if demon.img_position>=15 or (demon.img_position~=11 and demon.img_position~=7 and demon.img_position~=3) then 
-    --     demon.img_position = 3 
-    --   end
-    --   if demon.y~=player.y+5 then
-    --     demon.y = demon.y + 1
-    --   end
-    --   if demon.y==player.y+5 then
-    --     if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
-    --       player.life = player.life - 1 
-    --     end
-    --   end
-    -- else
-    --   if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
-    --     player.life = player.life - 1 
-    --   end
-    -- end
+    if demon.y>=player.y+20 then
+      if demon.img_position>=13 or (demon.img_position~=9 and demon.img_position~=5 and demon.img_position~=1) then 
+        demon.img_position = 1
+      end
+      if demon.y~=player.y+20 then
+        demon.y = demon.y - 1
+      end 
+      if demon.y==player.y+20 then
+        if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
+          player.life = player.life - 1 
+        end
+      end   
+    elseif demon.y<=player.y+5 then
+      if demon.img_position>=15 or (demon.img_position~=11 and demon.img_position~=7 and demon.img_position~=3) then 
+        demon.img_position = 3 
+      end
+      if demon.y~=player.y+5 then
+        demon.y = demon.y + 1
+      end
+      if demon.y==player.y+5 then
+        if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
+          player.life = player.life - 1 
+        end
+      end
+    else
+      if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
+        player.life = player.life - 1 
+      end
+    end
 
     if update_frame>=0.3 then
       if (demon.img_position<13) then 
@@ -183,19 +203,6 @@ function love.update(dt)
       update_frame= 0
     end
   end
-
-  for i=1, #objs do
-    if objs[i].type=='item' and objs[i].exist~=nil and objs[i].exist==true then 
-      if player.x>=objs[i].x and player.x<=objs[i].x+(objs[i].w) then 
-        if player.y>=objs[i].y-(player.quad.h+20) and player.y<=objs[i].y then
-          player.life = player.life + 100 
-          objs[i].exist=false
-        end
-      end
-
-    end
-  end 
-
 
   table.sort(objs, function(o1, o2) return o1.y<o2.y end)
 end
@@ -209,7 +216,7 @@ function love.draw()
       end
     else
       if objs[i].exist==nil or objs[i].exist==true then
-        love.graphics.draw(objs[i].sprite.image, objs[i].quad, objs[i].x, objs[i].y, 0, 1.5, 1.5, 0, objs[i].h)    
+        love.graphics.draw(objs[i].sprite.image, objs[i].quad, objs[i].x, objs[i].y, 0, 1.5, 1.5, (objs[i].w/2), objs[i].h)    
       end
     end
   end   

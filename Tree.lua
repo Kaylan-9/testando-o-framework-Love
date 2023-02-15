@@ -6,6 +6,7 @@ local function Tree(x, y)
   local width, height = love.graphics.getDimensions()
   return {
     x= x,
+    exist= true,
     y= height-y,
     w= tree_quad.w,
     h= tree_quad.h,
@@ -13,7 +14,7 @@ local function Tree(x, y)
     quad= love.graphics.newQuad(0, 0, tree_quad.w, tree_quad.h, spritesheet.w, spritesheet.h),
     sprite= {
       image= love.graphics.newImage('sprites/scenographicobjects.png'),
-    }
+    } 
   }
 end
 

@@ -2,7 +2,7 @@ _G.love = require 'love'
 
 local function Demon()
   local demon_quad= {
-    h = 64,
+    h = 64, 
     w = 64
   }
   local update_frame = 0
@@ -12,6 +12,8 @@ local function Demon()
     left= 2, 
     right= 4
   }
+  local enemy_ray = 2
+
   return {
     img_position=4,
     sprite_change_marker=0.0,
@@ -53,51 +55,57 @@ local function Demon()
         end
       end
 
-      if demon.x<=player.x-((player.quad.w/2)+10) then
-        if demon.x~=player.x-((player.quad.w/2)+10) then
-          demon.x = demon.x + 1
-        end
-        if demon.x==player.x-((player.quad.w/2)+10) then
-          if demon.y<player.y+20 and demon.y>player.y+5 then
+      
+      enemy_ray=math.sqrt(((player.x-demon.x)^2)+((player.y-demon.y)^2))
+      if enemy_ray>1 and enemy_ray<208 then
+
+        if demon.x<=player.x-((player.quad.w/2)+10) then
+          if demon.x~=player.x-((player.quad.w/2)+10) then
+            demon.x = demon.x + 1
+          end
+          if demon.x==player.x-((player.quad.w/2)+10) then
+            if demon.y<player.y+20 and demon.y>player.y+5 then
+              player.life = player.life - 1 
+            end
+          end
+        elseif demon.x>=player.x+((player.quad.w/2)+10) then
+          if demon.x~=player.x+((player.quad.w/2)+10) then
+            demon.x = demon.x - 1
+          end
+          if demon.x==player.x+((player.quad.w/2)+10) then
+            if demon.y<player.y+20 and demon.y>player.y+5 then
+              player.life = player.life - 1 
+            end
+          end
+        else
+          if demon.y<=player.y+20 and demon.y>=player.y+5 then
             player.life = player.life - 1 
           end
         end
-      elseif demon.x>=player.x+((player.quad.w/2)+10) then
-        if demon.x~=player.x+((player.quad.w/2)+10) then
-          demon.x = demon.x - 1
-        end
-        if demon.x==player.x+((player.quad.w/2)+10) then
-          if demon.y<player.y+20 and demon.y>player.y+5 then
+      
+        if demon.y>=player.y+20 then
+          if demon.y~=player.y+20 then
+            demon.y = demon.y - 1
+          end 
+          if demon.y==player.y+20 then
             player.life = player.life - 1 
+          end   
+        elseif demon.y<=player.y+5 then
+          if demon.y~=player.y+5 then
+            demon.y = demon.y + 1
           end
-        end
-      else
-        if demon.y<=player.y+20 and demon.y>=player.y+5 then
-          player.life = player.life - 1 
-        end
-      end
-    
-      if demon.y>=player.y+20 then
-        if demon.y~=player.y+20 then
-          demon.y = demon.y - 1
-        end 
-        if demon.y==player.y+20 then
-          player.life = player.life - 1 
-        end   
-      elseif demon.y<=player.y+5 then
-        if demon.y~=player.y+5 then
-          demon.y = demon.y + 1
-        end
-        if demon.y==player.y+5 then
+          if demon.y==player.y+5 then
+            if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
+              player.life = player.life - 1 
+            end
+          end
+        else
           if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
             player.life = player.life - 1 
           end
         end
-      else
-        if demon.x>=player.x-((player.quad.w/2)+10) and demon.x<=player.x+((player.quad.w/2)+10) then
-          player.life = player.life - 1 
-        end
       end
+
 
       if update_frame>=0.3 then
         if (demon.img_position<13) then 

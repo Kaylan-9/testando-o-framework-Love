@@ -1,14 +1,14 @@
-_G.love = require 'love'
+require 'love'
 
-local function Demon(self)
+local function Demon(x, y)
   local props= {
     update_frame = 0,
     sprite_placements = {top=  1, bottom= 3, left= 2, right= 4},
-    enemy_ray = 209,
+    enemy_ray = 151,
     img_position=4,
     sprite_change_marker=0.0,
-    x=100,
-    y=250,
+    x=x,
+    y=y,
     quad= {h = 64, w = 64}, 
     life=250,
     sprite= {
@@ -18,11 +18,23 @@ local function Demon(self)
     },
     max_frames= {x= 4, y= 4},
     quads= {},
-    speed= 1,
+    speed= {
+      x= 0,
+      y= 0
+    },
+    collisionMoves= function(self, collision)
+      if collision.top then self.y= self.y - 2
+      elseif collision.bottom then self.y= self.y + 2
+      end
+      if collision.left then self.x= self.x + 2
+      elseif collision.right then self.x= self.x - 2
+      end
+    end,
     chaseObj= function(self, dt, player)
       self.enemy_ray=math.sqrt(((player.x-self.x)^2)+((player.y-self.y)^2))
-      if self.enemy_ray>1 and self.enemy_ray<208 then
-        self.speed= math.random(1, (100-(((208-self.enemy_ray)*100)/208))/30) * (self.update_frame+1)
+      if self.enemy_ray>20 and self.enemy_ray<150 then
+        self.speed.y= math.random(1, (100-(((150-self.enemy_ray)*100)/150))/33.3) * (self.update_frame+1)
+        self.speed.x= math.random(1, (100-(((150-self.enemy_ray)*100)/150))/33.3) * (self.update_frame+1)
 
         if self.x<=player.x-((player.quad.w/2)+10) and self.y>=player.y+20 then
           if player.x-((player.quad.w/2)+10)-self.x>self.y-player.y+20 then
@@ -44,7 +56,7 @@ local function Demon(self)
 
         if self.x<=player.x-((player.quad.w/2)+10) then
           if self.x~=player.x-((player.quad.w/2)+10) then
-            self.x = self.x + self.speed
+            self.x = self.x + self.speed.x
           end
           if self.x==player.x-((player.quad.w/2)+10) then
             if self.y<player.y+20 and self.y>player.y+5 then
@@ -53,7 +65,7 @@ local function Demon(self)
           end
         elseif self.x>=player.x+((player.quad.w/2)+10) then
           if self.x~=player.x+((player.quad.w/2)+10) then
-            self.x = self.x - self.speed
+            self.x = self.x - self.speed.x
           end
           if self.x==player.x+((player.quad.w/2)+10) then
             if self.y<player.y+20 and self.y>player.y+5 then
@@ -68,14 +80,14 @@ local function Demon(self)
       
         if self.y>=player.y+20 then
           if self.y~=player.y+20 then
-            self.y = self.y - self.speed
+            self.y = self.y - self.speed.y
           end 
           if self.y==player.y+20 then
             player.life = player.life - 1 
           end   
         elseif self.y<=player.y+5 then
           if self.y~=player.y+5 then
-            self.y = self.y + self.speed
+            self.y = self.y + self.speed.y
           end
           if self.y==player.y+5 then
             if self.x>=player.x-((player.quad.w/2)+10) and self.x<=player.x+((player.quad.w/2)+10) then

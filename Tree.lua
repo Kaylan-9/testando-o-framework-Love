@@ -1,9 +1,9 @@
-local love = require 'love'
+require 'love'
 
-local function Tree(x, y)
+local function Tree(self, x, y)
+  local width, height = love.graphics.getDimensions()
   local spritesheet= {w=169, h=154}
   local tree_quad= {w=80, h=85}
-  local width, height = love.graphics.getDimensions()
   return {
     x= x,
     exist= true,

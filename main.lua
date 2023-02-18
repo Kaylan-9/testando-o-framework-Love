@@ -1,40 +1,53 @@
 require 'love'
+
 local Player= require 'Player'
-local platform= require 'Platform'
-local Demon= require 'Demon'
+local Platform= require 'Platform'
+local Enemies= require 'Enemies'
 local width, heigth = love.graphics.getDimensions()
+local platform= Platform()
 local player = Player()
-local demon = Demon()
-local trees= platform:trees()
-local items= platform:items()
-local objs= trees
-for i=1, #items do table.insert(objs, items[i]) end
-table.insert(objs, demon)
-table.insert(objs, player)
+local enemies = Enemies(platform)
+local objs= {}
 
 function love.load()
   love.window.setTitle('Hello, World')
   love.mouse.setVisible(false)
   love.graphics.setBackgroundColor(120/255, 200/255, 255/255)
+  platform:trees()
+  platform:items()
+  table.insert(objs, player)
+  for i=1, #enemies.objs do table.insert(objs, enemies.objs[i]) end
+  for i=1, #platform.objs.items do table.insert(objs, platform.objs.items[i]) end
+  for i=1, #platform.objs.trees do table.insert(objs, platform.objs.trees[i]) end
 end
 
 function love.update(dt)
   if player.life>0 then
-    player:controls(platform)
-    player:collides(trees, function() end)
-    player:collides(items, function(i) 
-      if items[i].type=='item' then
-        player.life = player.life + 100 
-        items[i].exist=false
-      end
-    end)
-    demon:chaseObj(dt, player)
+    player:controls(platform, enemies)
+    player:collides(platform, {
+      {
+        objs=platform.objs.trees, 
+        func=function(i) end
+      },
+      {
+        objs=platform.objs.items, 
+        func=function(i) 
+          if platform.objs.items[i].type=='item' then
+            player.life = player.life + 100 
+            platform.objs.items[i].exist=false
+          end
+        end
+      },
+    })
+    for i=1, #enemies.objs do enemies.objs[i]:collisionMoves(player.collision) end
+    for i=1, #enemies.objs do enemies.objs[i]:chaseObj(dt, player) end
+    player:reactivateObjMovement()
   end
   table.sort(objs, function(o1, o2) return o1.y<o2.y end)
 end
 
 function love.draw()
-  platform.ground.draw()
+  platform:ground().draw()
   for i=1,#objs do
     if objs[i].quads~=nil then 
       if objs[i].life>0 then love.graphics.draw(objs[i].sprite.image, objs[i].quads[objs[i].img_position], objs[i].x, objs[i].y, 0, 1.5, 1.5, (objs[i].quad.w/2), objs[i].quad.h) end

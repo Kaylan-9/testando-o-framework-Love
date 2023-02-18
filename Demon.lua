@@ -18,9 +18,12 @@ local function Demon(self)
     },
     max_frames= {x= 4, y= 4},
     quads= {},
+    speed= 1,
     chaseObj= function(self, dt, player)
       self.enemy_ray=math.sqrt(((player.x-self.x)^2)+((player.y-self.y)^2))
       if self.enemy_ray>1 and self.enemy_ray<208 then
+        self.speed= math.random(1, (100-(((208-self.enemy_ray)*100)/208))/30) * (self.update_frame+1)
+
         if self.x<=player.x-((player.quad.w/2)+10) and self.y>=player.y+20 then
           if player.x-((player.quad.w/2)+10)-self.x>self.y-player.y+20 then
             self.img_position= self.sprite_placements.right
@@ -41,7 +44,7 @@ local function Demon(self)
 
         if self.x<=player.x-((player.quad.w/2)+10) then
           if self.x~=player.x-((player.quad.w/2)+10) then
-            self.x = self.x + 1
+            self.x = self.x + self.speed
           end
           if self.x==player.x-((player.quad.w/2)+10) then
             if self.y<player.y+20 and self.y>player.y+5 then
@@ -50,7 +53,7 @@ local function Demon(self)
           end
         elseif self.x>=player.x+((player.quad.w/2)+10) then
           if self.x~=player.x+((player.quad.w/2)+10) then
-            self.x = self.x - 1
+            self.x = self.x - self.speed
           end
           if self.x==player.x+((player.quad.w/2)+10) then
             if self.y<player.y+20 and self.y>player.y+5 then
@@ -65,14 +68,14 @@ local function Demon(self)
       
         if self.y>=player.y+20 then
           if self.y~=player.y+20 then
-            self.y = self.y - 1
+            self.y = self.y - self.speed
           end 
           if self.y==player.y+20 then
             player.life = player.life - 1 
           end   
         elseif self.y<=player.y+5 then
           if self.y~=player.y+5 then
-            self.y = self.y + 1
+            self.y = self.y + self.speed
           end
           if self.y==player.y+5 then
             if self.x>=player.x-((player.quad.w/2)+10) and self.x<=player.x+((player.quad.w/2)+10) then

@@ -32,7 +32,7 @@ local function Demon(x, y)
     end,
     chaseObj= function(self, dt, player)
       self.enemy_ray=math.sqrt(((player.x-self.x)^2)+((player.y-self.y)^2))
-      if self.enemy_ray>20 and self.enemy_ray<150 then
+      if self.enemy_ray>5 and self.enemy_ray<150 then
         self.speed.y= math.random(1, (100-(((150-self.enemy_ray)*100)/150))/33.3) * (self.update_frame+1)
         self.speed.x= math.random(1, (100-(((150-self.enemy_ray)*100)/150))/33.3) * (self.update_frame+1)
 

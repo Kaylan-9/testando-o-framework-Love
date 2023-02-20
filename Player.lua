@@ -46,6 +46,7 @@ local function Player()
                 interactions[j].func(i)
               end
             end 
+            
             if self.y>self.objs[i].y-10 and self.y<self.objs[i].y+10 then
               if self.x>self.objs[i].x-(self.quad.w/2) and self.x<self.objs[i].x+(self.quad.w/2) then
                 self.collision.bottom= true
@@ -89,64 +90,51 @@ local function Player()
       self.collision.right= false
     end,
     controls= function(self, platform, enemies)
-      if self.x<platform.right then
-        if love.keyboard.isDown('d') then
-          self:animationControl()
-          if self.img_position>=#self.quads or (self.img_position~=3 and self.img_position~=7 and self.img_position~=10) then
-            self.img_position = 3
-          end
-
-          platform.x = platform.x - 2
-          for i=1, #platform.objs.trees do platform.objs.trees[i].x = platform.objs.trees[i].x - 2 end
-          for i=1, #platform.objs.items do platform.objs.items[i].x = platform.objs.items[i].x - 2 end
-          for i=1, #enemies.objs do enemies.objs[i].x = enemies.objs[i].x - 2 end
-        end  
-      end
+      
+      if love.keyboard.isDown('d') then
+        self:animationControl()
+        if self.img_position>=#self.quads or (self.img_position~=3 and self.img_position~=7 and self.img_position~=10) then
+          self.img_position = 3
+        end
+        platform.x = platform.x - 2
+        for i=1, #platform.objs.trees do platform.objs.trees[i].x = platform.objs.trees[i].x - 2 end
+        for i=1, #platform.objs.items do platform.objs.items[i].x = platform.objs.items[i].x - 2 end
+        for i=1, #enemies.objs do enemies.objs[i].x = enemies.objs[i].x - 2 end
+      end  
   
-      if self.x-(self.quad.w/2)>platform.left then
-        if love.keyboard.isDown('a') then
-          self:animationControl()
-          if self.img_position>=#self.quads or (self.img_position~=2 and self.img_position~=6 and self.img_position~=8) then
-            self.img_position = 2
-          end
-
-          -- self.x = self.x - 2
-          platform.x = platform.x + 2
-          for i=1, #platform.objs.trees do platform.objs.trees[i].x = platform.objs.trees[i].x + 2 end
-          for i=1, #platform.objs.items do platform.objs.items[i].x = platform.objs.items[i].x + 2 end
-          for i=1, #enemies.objs do enemies.objs[i].x = enemies.objs[i].x + 2 end
-        end  
-      end
+      if love.keyboard.isDown('a') then
+        self:animationControl()
+        if self.img_position>=#self.quads or (self.img_position~=2 and self.img_position~=6 and self.img_position~=8) then
+          self.img_position = 2
+        end
+        platform.x = platform.x + 2
+        for i=1, #platform.objs.trees do platform.objs.trees[i].x = platform.objs.trees[i].x + 2 end
+        for i=1, #platform.objs.items do platform.objs.items[i].x = platform.objs.items[i].x + 2 end
+        for i=1, #enemies.objs do enemies.objs[i].x = enemies.objs[i].x + 2 end
+      end  
+      
+      if love.keyboard.isDown('w') then
+        self:animationControl()
+        if self.img_position>=#self.quads or (self.img_position~=4 and self.img_position~=8 and self.img_position~=12) then
+          self.img_position = 4
+        end
+        platform.y = platform.y + 2
+        for i=1, #platform.objs.trees do platform.objs.trees[i].y = platform.objs.trees[i].y + 2 end
+        for i=1, #platform.objs.items do platform.objs.items[i].y = platform.objs.items[i].y + 2 end
+        for i=1, #enemies.objs do enemies.objs[i].y = enemies.objs[i].y + 2 end
+      end  
   
-      if self.y>platform.top then 
-        if love.keyboard.isDown('w') then
-          self:animationControl()
-          if self.img_position>=#self.quads or (self.img_position~=4 and self.img_position~=8 and self.img_position~=12) then
-            self.img_position = 4
-          end
-
-          -- self.y = self.y - 2
-          platform.y = platform.y + 2
-          for i=1, #platform.objs.trees do platform.objs.trees[i].y = platform.objs.trees[i].y + 2 end
-          for i=1, #platform.objs.items do platform.objs.items[i].y = platform.objs.items[i].y + 2 end
-          for i=1, #enemies.objs do enemies.objs[i].y = enemies.objs[i].y + 2 end
-        end  
-      end
-  
-      if self.y<platform.bottom then 
-        if love.keyboard.isDown('s') then
-          self:animationControl()
-          if self.img_position>=#self.quads or (self.img_position~=1 and self.img_position~=5 and self.img_position~=9) then
-            self.img_position = 1
-          end
-
-          -- self.y = self.y + 2
-          platform.y = platform.y - 2
-          for i=1, #platform.objs.trees do platform.objs.trees[i].y = platform.objs.trees[i].y - 2 end
-          for i=1, #platform.objs.items do platform.objs.items[i].y = platform.objs.items[i].y - 2 end
-          for i=1, #enemies.objs do enemies.objs[i].y = enemies.objs[i].y - 2 end
-        end  
-      end
+      if love.keyboard.isDown('s') then
+        self:animationControl()
+        if self.img_position>=#self.quads or (self.img_position~=1 and self.img_position~=5 and self.img_position~=9) then
+          self.img_position = 1
+        end
+        platform.y = platform.y - 2
+        for i=1, #platform.objs.trees do platform.objs.trees[i].y = platform.objs.trees[i].y - 2 end
+        for i=1, #platform.objs.items do platform.objs.items[i].y = platform.objs.items[i].y - 2 end
+        for i=1, #enemies.objs do enemies.objs[i].y = enemies.objs[i].y - 2 end
+      end  
+      
     end
   }
   

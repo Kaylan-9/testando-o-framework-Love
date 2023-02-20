@@ -3,7 +3,8 @@ local Tree= require 'Tree'
 local Item= require 'Item'
 
 local width, height = love.graphics.getDimensions()
-local nBlocksInY= 10
+local nBlocksInY= 30
+local nBlocksInX= 30
 local grass= {
   one= {
     image= love.graphics.newImage('sprites/Grass1.jpg'),
@@ -19,6 +20,7 @@ local function Platform()
   return {
     grass= grass, 
     nBlocksInY = nBlocksInY,
+    nBlocksInX = nBlocksInX,
     bottom = height,
     right = width,
     left= 0,
@@ -32,27 +34,30 @@ local function Platform()
     ground= function(self)
       return {
         draw= function()
-          local x, y = 32, self.bottom-32
-          for i=1, 25 do
-            for j=1, self.nBlocksInY do
-              love.graphics.draw(grass.one.image, (x * (i - 1))+self.x, (y - (grass.one.size * (j - 1)))+self.y, 0, 1.5, 1.5)
+          local x, y = grass.one.size, grass.one.size
+          for i=1, nBlocksInX do
+            for j=1, nBlocksInY do
+              local postionx= (x * (i - 1))+self.x+(width/2)-((nBlocksInX*grass.one.size)/2)
+              local postiony= (y * (j - 1))+self.y+(height/2)-((nBlocksInX*grass.one.size)/2)
+              love.graphics.draw(grass.one.image, postionx, postiony, 0, 1.5, 1.5, (grass.one.size/2), (grass.one.size/2))
             end
           end
         end,
       }
     end,
     trees= function(self) 
-      for i=1, 20 do
-        local x= math.random(width)
-        local y= math.random(self.top*2)+85
+      for i=1, 150 do
+        local x= math.random((width/2)-((nBlocksInX*grass.one.size)/2), (width/2)+((nBlocksInX*grass.one.size)/2)-32)-32
+        local y= math.random((height/2)-((nBlocksInY*grass.one.size)/2), (height/2)+((nBlocksInY*grass.one.size)/2))+32
         table.insert(self.objs.trees, Tree({}, x, y))
       end
       return self.objs.trees
     end,
     items= function(self)
-      for i=1, 20 do
+      for i=1, 500 do
         local image_x, image_y= math.random(3), math.random(3)
-        local x, y= math.random(width), math.random((self.top*2)+85)
+        local x= math.random((width/2)-((nBlocksInX*grass.one.size)/2), (width/2)+((nBlocksInX*grass.one.size)/2)-32)-32
+        local y= math.random((height/2)-((nBlocksInY*grass.one.size)/2), (height/2)+((nBlocksInY*grass.one.size)/2))+32
         table.insert(self.objs.items, Item(x, y, image_x, image_y))
       end
       return self.objs.items
